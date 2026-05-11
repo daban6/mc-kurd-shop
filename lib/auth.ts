@@ -1,8 +1,10 @@
 import "server-only";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins";
 import { Pool } from "pg";
 import { PostgresDialect } from "kysely";
+import { ac, superAdmin, contentAdmin, paymentAdmin } from "./permissions";
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
@@ -13,5 +15,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [nextCookies()],
+  plugins: [
+    admin({
+      ac,
+      roles: { superAdmin, contentAdmin, paymentAdmin },
+      adminRoles: ["superAdmin", "contentAdmin", "paymentAdmin"],
+    }),
+    nextCookies(),
+  ],
 });

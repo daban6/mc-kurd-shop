@@ -13,17 +13,6 @@ CREATE TABLE user_profile (
   "createdAt"  timestamptz NOT NULL DEFAULT now()
 );
 
--- admin_user
-
-CREATE TABLE admin_user (
-  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name           text NOT NULL,
-  email          text NOT NULL UNIQUE,
-  "passwordHash" text NOT NULL,
-  role           admin_role NOT NULL,
-  "createdAt"    timestamptz NOT NULL DEFAULT now()
-);
-
 -- category
 
 CREATE TABLE category (
