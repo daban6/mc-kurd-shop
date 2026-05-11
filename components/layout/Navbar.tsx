@@ -50,7 +50,7 @@ export default function Navbar({ locale }: { locale: string }) {
                 onClick={() => switchLocale("en")}
                 className={`px-2 py-1 transition-colors ${
                   locale === "en"
-                    ? "bg-primary text-foreground"
+                    ? "bg-violet-600 text-foreground"
                     : "text-muted hover:text-foreground"
                 }`}
               >
@@ -60,7 +60,7 @@ export default function Navbar({ locale }: { locale: string }) {
                 onClick={() => switchLocale("ku")}
                 className={`px-2 py-1 transition-colors ${
                   locale === "ku"
-                    ? "bg-primary text-foreground"
+                    ? "bg-violet-600 text-foreground"
                     : "text-muted hover:text-foreground"
                 }`}
               >

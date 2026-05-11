@@ -191,7 +191,7 @@ export default async function Home({
                 className="group flex flex-col overflow-hidden rounded border border-border bg-surface transition-colors hover:border-primary/50"
               >
                 {/* Product Image Placeholder */}
-                <div className="h-36 bg-border/50">
+                <div className="h-36 bg-gradient-to-br from-violet-950/40 to-slate-900">
                   <div className="flex h-full w-full items-center justify-center">
                     <Package className="h-8 w-8 text-muted" />
                   </div>
