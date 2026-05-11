@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -26,11 +24,7 @@ export default async function LocaleLayout({
       className="h-full bg-background antialiased"
     >
       <body className="min-h-full flex flex-col font-sans">
-        <NextIntlClientProvider>
-          <Navbar locale={locale} />
-          <main className="flex-1">{children}</main>
-          <Footer locale={locale} />
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
