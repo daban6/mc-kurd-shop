@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @font-face {
   font-family: "Ping";
   src: url("/fonts/Ping-Hairline.woff2") format("woff2");
