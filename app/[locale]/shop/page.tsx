@@ -236,7 +236,7 @@ export default function ShopPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
-      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-row px-4 py-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-row gap-6 px-6 py-6">
         {/* Desktop Sidebar */}
         <aside className="hidden w-56 shrink-0 border-r border-border pr-5 lg:block">
           <FilterSidebar />
