@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, Sword } from "lucide-react";
 import { useState } from "react";
 
 export default function Navbar({ locale }: { locale: string }) {
@@ -24,7 +24,8 @@ export default function Navbar({ locale }: { locale: string }) {
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex h-12 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-1.5">
+            <Sword className="h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">MC Kurd Shop</span>
           </Link>
 

@@ -101,7 +101,7 @@ export default async function Home({
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Hero Section */}
-      <section className="border-b border-border bg-surface px-4 py-12 md:py-16">
+      <section className="border-b border-border bg-surface px-4 py-6 md:py-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col items-center text-center">
             <h1 className="max-w-2xl text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl text-balance">
@@ -143,7 +143,7 @@ export default async function Home({
             </h2>
             <Link
               href="/categories"
-              className="text-xs text-primary transition-colors hover:text-primary-hover"
+              className="text-xs text-violet-400 transition-colors hover:text-violet-300"
             >
               {isKurdish ? "هەموو ببینە" : "View all"}
             </Link>
@@ -153,15 +153,17 @@ export default async function Home({
               <Link
                 key={category.id}
                 href={`/categories/${category.name.toLowerCase()}`}
-                className="group flex flex-col items-center gap-2 rounded border border-border bg-surface p-4 transition-colors hover:border-primary/50"
+                className="group flex h-16 items-center gap-3 rounded border border-border bg-surface px-4 transition-colors hover:border-primary/50"
               >
-                <category.icon className="h-6 w-6 text-primary" />
-                <span className="text-sm font-medium text-foreground">
-                  {isKurdish ? category.nameKu : category.name}
-                </span>
-                <span className="text-xs text-muted">
-                  {category.count} {isKurdish ? "بەرهەم" : "items"}
-                </span>
+                <category.icon className="h-5 w-5 shrink-0 text-primary" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">
+                    {isKurdish ? category.nameKu : category.name}
+                  </span>
+                  <span className="text-xs text-muted">
+                    {category.count} {isKurdish ? "بەرهەم" : "items"}
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
@@ -177,7 +179,7 @@ export default async function Home({
             </h2>
             <Link
               href="/shop"
-              className="text-xs text-primary transition-colors hover:text-primary-hover"
+              className="text-xs text-violet-400 transition-colors hover:text-violet-300"
             >
               {isKurdish ? "هەموو ببینە" : "View all"}
             </Link>
@@ -189,7 +191,7 @@ export default async function Home({
                 className="group flex flex-col overflow-hidden rounded border border-border bg-surface transition-colors hover:border-primary/50"
               >
                 {/* Product Image Placeholder */}
-                <div className="aspect-square bg-border/50">
+                <div className="h-36 bg-border/50">
                   <div className="flex h-full w-full items-center justify-center">
                     <Package className="h-8 w-8 text-muted" />
                   </div>
