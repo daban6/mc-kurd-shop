@@ -44,6 +44,20 @@ export default function Navbar({ locale }: { locale: string }) {
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
+            {/* Currency Switcher */}
+            <div className="flex items-center rounded border border-border bg-surface text-xs">
+              <button
+                className="bg-violet-600 px-2 py-1 text-foreground transition-colors"
+              >
+                IQD
+              </button>
+              <button
+                className="px-2 py-1 text-muted transition-colors hover:text-foreground"
+              >
+                USD
+              </button>
+            </div>
+
             {/* Language Switcher */}
             <div className="flex items-center rounded border border-border bg-surface text-xs">
               <button
