@@ -9,7 +9,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Hairline.woff2") format("woff2");
   font-weight: 100;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -17,7 +16,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Thin.woff2") format("woff2");
   font-weight: 200;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -25,7 +23,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-ExtraLight.woff2") format("woff2");
   font-weight: 300;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -33,7 +30,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Light.woff2") format("woff2");
   font-weight: 400;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -41,7 +37,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Regular.woff2") format("woff2");
   font-weight: 500;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -49,7 +44,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Medium.woff2") format("woff2");
   font-weight: 600;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -57,7 +51,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Bold.woff2") format("woff2");
   font-weight: 700;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -65,7 +58,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Heavy.woff2") format("woff2");
   font-weight: 800;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -73,7 +65,6 @@
   font-family: "Ping";
   src: url("/fonts/Ping-Black.woff2") format("woff2");
   font-weight: 900;
-  font-style: normal;
   font-display: swap;
 }
 
