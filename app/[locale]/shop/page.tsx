@@ -236,9 +236,9 @@ export default function ShopPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
-      <div className="mx-auto flex w-full max-w-7xl flex-1 px-4 py-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-row px-4 py-6">
         {/* Desktop Sidebar */}
-        <aside className="hidden w-[220px] shrink-0 border-r border-border pr-5 lg:block">
+        <aside className={`hidden w-[220px] shrink-0 border-border lg:block ${isKurdish ? "order-last border-l pl-5" : "border-r pr-5"}`}>
           <FilterSidebar />
         </aside>
 
@@ -284,7 +284,7 @@ export default function ShopPage() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 lg:pl-5">
+        <main className={`flex-1 ${isKurdish ? "lg:pr-5" : "lg:pl-5"}`}>
           {/* Results Header */}
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="text-sm text-muted">
@@ -320,7 +320,7 @@ export default function ShopPage() {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {paginatedProducts.map((product) => (
               <Link
                 key={product.id}
