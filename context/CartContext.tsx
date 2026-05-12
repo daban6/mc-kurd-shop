@@ -8,8 +8,6 @@ import {
   useCallback,
 } from "react";
 
-const HARDCODED_USER_ID = "8LUaQsVuXEqvMUnZIqL5Wl5KkVaEycMX";
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface CartProduct {
@@ -55,7 +53,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const fetchCart = useCallback(async () => {
     try {
-      const res  = await fetch(`/api/cart?userId=${HARDCODED_USER_ID}`);
+      const res  = await fetch("/api/cart");
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch {
@@ -74,7 +72,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const res  = await fetch("/api/cart", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ userId: HARDCODED_USER_ID, productId }),
+        body:    JSON.stringify({ productId }),
       });
       const data = await res.json();
       await fetchCart();

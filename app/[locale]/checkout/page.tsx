@@ -44,7 +44,6 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: "8LUaQsVuXEqvMUnZIqL5Wl5KkVaEycMX",
           currency,
           paymentMethod: selectedMethod,
           items: items.map((item) => ({

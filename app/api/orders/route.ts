@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 type Currency = "IQD" | "USD";
 type PaymentMethod = "fib" | "fastpay" | "qicard" | "crypto";
@@ -10,7 +12,7 @@ interface OrderItem {
   priceUsd: number;
 }
 
-const CURRENCIES: Currency[] = ["IQD", "USD"];
+const CURRENCIES: Currency[]           = ["IQD", "USD"];
 const PAYMENT_METHODS: PaymentMethod[] = ["fib", "fastpay", "qicard", "crypto"];
 const ALPHANUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -24,6 +26,9 @@ function generateOrderId(): string {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   let body: unknown;
   try {
     body = await req.json();
@@ -35,11 +40,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { userId, currency, paymentMethod, items } = body as Record<string, unknown>;
+  const { currency, paymentMethod, items } = body as Record<string, unknown>;
 
-  if (typeof userId !== "string" || !userId.trim()) {
-    return NextResponse.json({ error: "userId is required" }, { status: 400 });
-  }
   if (!CURRENCIES.includes(currency as Currency)) {
     return NextResponse.json({ error: "currency must be IQD or USD" }, { status: 400 });
   }
@@ -68,18 +70,17 @@ export async function POST(req: NextRequest) {
     sanitizedItems.push({ productId: productId.trim(), priceIqd, priceUsd });
   }
 
-  const totalIqd = sanitizedItems.reduce((sum, i) => sum + i.priceIqd, 0);
-  const totalUsd = sanitizedItems.reduce((sum, i) => sum + i.priceUsd, 0);
+  const totalIqd  = sanitizedItems.reduce((sum, i) => sum + i.priceIqd, 0);
+  const totalUsd  = sanitizedItems.reduce((sum, i) => sum + i.priceUsd, 0);
   const orderCode = generateOrderId();
-  const now = new Date().toISOString();
-
-  const supabase = createAdminClient();
+  const now       = new Date().toISOString();
+  const supabase  = createAdminClient();
 
   const { data: orderRow, error: orderError } = await supabase
     .from("order")
     .insert({
       orderCode,
-      userId: userId.trim(),
+      userId: session.user.id,
       status: "pending",
       currency,
       paymentMethod,
@@ -96,10 +97,10 @@ export async function POST(req: NextRequest) {
   }
 
   const orderItems = sanitizedItems.map((item) => ({
-    orderId: orderRow.id,
+    orderId:   orderRow.id,
     productId: item.productId,
-    priceIqd: item.priceIqd,
-    priceUsd: item.priceUsd,
+    priceIqd:  item.priceIqd,
+    priceUsd:  item.priceUsd,
   }));
 
   const { error: itemsError } = await supabase.from("order_item").insert(orderItems);

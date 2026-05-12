@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 import { randomBytes } from "crypto";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-const VALID_STATUSES = ["pending", "approved", "rejected"];
-const VALID_ACTIONS = ["approve", "reject"] as const;
+const VALID_STATUSES  = ["pending", "approved", "rejected"];
+const VALID_ACTIONS   = ["approve", "reject"] as const;
+const ADMIN_ROLES     = ["superAdmin", "contentAdmin", "paymentAdmin"];
 type Action = (typeof VALID_ACTIONS)[number];
 
 function groupBy<T extends Record<string, unknown>>(
@@ -25,6 +28,12 @@ function groupBy<T extends Record<string, unknown>>(
 // ─── GET ─────────────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!ADMIN_ROLES.includes(session.user.role as string)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { searchParams } = req.nextUrl;
   const status = searchParams.get("status");
 
@@ -54,7 +63,7 @@ export async function GET(req: NextRequest) {
   }
 
   const orderIds = orders.map((o) => o.id as string);
-  const userIds = [...new Set(orders.map((o) => o.userId as string))];
+  const userIds  = [...new Set(orders.map((o) => o.userId as string))];
 
   const [itemsRes, screenshotsRes, usersRes] = await Promise.all([
     supabase.from("order_item").select("*").in("orderId", orderIds),
@@ -79,8 +88,8 @@ export async function GET(req: NextRequest) {
 
   const result = orders.map((order) => ({
     ...order,
-    user: usersById[order.userId as string] ?? null,
-    items: itemsByOrder[order.id as string] ?? [],
+    user:        usersById[order.userId as string] ?? null,
+    items:       itemsByOrder[order.id as string] ?? [],
     screenshots: screenshotsByOrder[order.id as string] ?? [],
   }));
 
@@ -90,6 +99,12 @@ export async function GET(req: NextRequest) {
 // ─── PATCH ───────────────────────────────────────────────────────────────────
 
 export async function PATCH(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!ADMIN_ROLES.includes(session.user.role as string)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -113,8 +128,8 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  const supabase = createAdminClient();
-  const now = new Date().toISOString();
+  const supabase  = createAdminClient();
+  const now       = new Date().toISOString();
   const newStatus = action === "approve" ? "approved" : "rejected";
 
   const { data: order, error: fetchError } = await supabase
@@ -150,8 +165,8 @@ export async function PATCH(req: NextRequest) {
 
     const downloads = (items ?? []).map((item) => ({
       orderItemId: item.id as string,
-      userId: order.userId as string,
-      token: randomBytes(16).toString("hex"),
+      userId:      order.userId as string,
+      token:       randomBytes(16).toString("hex"),
       expiresAt,
     }));
 
@@ -172,15 +187,15 @@ export async function PATCH(req: NextRequest) {
       .single();
 
     if (user?.email) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend    = new Resend(process.env.RESEND_API_KEY);
       const expiryDate = new Date(expiresAt).toDateString();
-      const tokenList = downloads
+      const tokenList  = downloads
         .map((d, i) => `${i + 1}. ${d.token}  (expires ${expiryDate})`)
         .join("\n");
 
       await resend.emails.send({
-        from: "noreply@mckurdshop.com",
-        to: user.email,
+        from:    "noreply@mckurdshop.com",
+        to:      user.email,
         subject: "Your order has been approved",
         text: [
           `Hi ${(user.name as string) ?? "there"},`,

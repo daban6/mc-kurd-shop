@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 // ─── GET ─────────────────────────────────────────────────────────────────────
 
-export async function GET(req: NextRequest) {
-  const userId = req.nextUrl.searchParams.get("userId")?.trim();
-  if (!userId) {
-    return NextResponse.json({ error: "userId is required" }, { status: 400 });
-  }
+export async function GET(_req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const userId  = session.user.id;
   const supabase = createAdminClient();
 
   const { data: cart } = await supabase
@@ -64,6 +65,9 @@ export async function GET(req: NextRequest) {
 // ─── POST ────────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   let body: unknown;
   try {
     body = await req.json();
@@ -75,17 +79,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { userId, productId } = body as Record<string, unknown>;
+  const { productId } = body as Record<string, unknown>;
 
-  if (typeof userId !== "string" || !userId.trim()) {
-    return NextResponse.json({ error: "userId is required" }, { status: 400 });
-  }
   if (typeof productId !== "string" || !productId.trim()) {
     return NextResponse.json({ error: "productId is required" }, { status: 400 });
   }
 
-  const uid = userId.trim();
-  const pid = productId.trim();
+  const uid      = session.user.id;
+  const pid      = productId.trim();
   const supabase = createAdminClient();
 
   // Find or create cart

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 // ─── GET /api/products/[slug]/reviews ─────────────────────────────────────────
 
@@ -30,7 +32,7 @@ export async function GET(
   const reviews = rows ?? [];
 
   // Batch fetch user names
-  const userIds = [...new Set(reviews.map((r) => r.userId as string))];
+  const userIds   = [...new Set(reviews.map((r) => r.userId as string))];
   const nameById: Record<string, string> = {};
 
   if (userIds.length > 0) {
@@ -70,8 +72,12 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { slug } = await params;
   const supabase  = createAdminClient();
+  const userId    = session.user.id;
 
   // ── Parse + validate body
   let body: unknown;
@@ -81,15 +87,7 @@ export async function POST(
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { userId, rating, comment } = body as {
-    userId?: unknown;
-    rating?: unknown;
-    comment?: unknown;
-  };
-
-  if (typeof userId !== "string" || !userId) {
-    return NextResponse.json({ error: "userId is required" }, { status: 400 });
-  }
+  const { rating, comment } = body as { rating?: unknown; comment?: unknown };
 
   if (
     typeof rating !== "number" ||
@@ -134,8 +132,7 @@ export async function POST(
     .eq("productId", product.id);
 
   const orderItemIds = (orderItems ?? []).map((oi) => oi.orderId as string);
-
-  let hasPurchased = false;
+  let hasPurchased   = false;
 
   if (orderItemIds.length > 0) {
     const { data: approvedOrders } = await supabase
