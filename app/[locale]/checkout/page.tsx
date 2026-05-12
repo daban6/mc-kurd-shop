@@ -6,10 +6,10 @@ import { Sword, Package, Lock, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 const paymentMethods = [
-  { id: "fib",     name: "FIB",     fullName: "First Iraqi Bank", glowColor: "#11998F" },
-  { id: "fastpay", name: "FastPay", fullName: "FastPay",          glowColor: "#EE3264" },
-  { id: "qicard",  name: "QiCard",  fullName: "QiCard",           glowColor: "#1D4ED8" },
-  { id: "crypto",  name: "Crypto",  fullName: "Cryptocurrency",   glowColor: "#F7931A" },
+  { id: "fib",     name: "FIB",     fullName: "First Iraqi Bank", glowColor: "#11998F", logo: "/payment/fib.png"     },
+  { id: "fastpay", name: "FastPay", fullName: "FastPay",          glowColor: "#EE3264", logo: "/payment/fastpay.png" },
+  { id: "qicard",  name: "QiCard",  fullName: "QiCard",           glowColor: "#1D4ED8", logo: "/payment/qicard.png"  },
+  { id: "crypto",  name: "Crypto",  fullName: "Cryptocurrency",   glowColor: "#F7931A", logo: "/payment/crypto.png"  },
 ];
 
 function formatIQD(price: number) {
@@ -188,7 +188,8 @@ export default function CheckoutPage() {
                       backgroundColor: "#13131a",
                     }}
                   >
-                    <div className="h-8 w-8 rounded" style={{ backgroundColor: method.glowColor }} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={method.logo} alt={method.name} className="h-8 w-8 object-contain" />
                     <span className="text-xs font-medium text-foreground">{method.name}</span>
                   </button>
                 );

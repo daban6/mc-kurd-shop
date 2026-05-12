@@ -9,6 +9,7 @@ interface MethodInfo {
   fullName: string;
   glowColor: string;
   accountNumber: string;
+  logo: string;
 }
 
 const METHOD_INFO: Record<string, MethodInfo> = {
@@ -17,24 +18,28 @@ const METHOD_INFO: Record<string, MethodInfo> = {
     fullName: "First Iraqi Bank",
     glowColor: "#11998F",
     accountNumber: "07517056835",
+    logo: "/payment/fib.png",
   },
   fastpay: {
     name: "FastPay",
     fullName: "FastPay",
     glowColor: "#EE3264",
     accountNumber: "07517056835",
+    logo: "/payment/fastpay.png",
   },
   qicard: {
     name: "QiCard",
     fullName: "QiCard",
     glowColor: "#1D4ED8",
     accountNumber: "07517056835",
+    logo: "/payment/qicard.png",
   },
   crypto: {
     name: "Crypto",
     fullName: "Cryptocurrency",
     glowColor: "#F7931A",
     accountNumber: "bc1q...wallet-address",
+    logo: "/payment/crypto.png",
   },
 };
 
@@ -178,10 +183,8 @@ export default function OrderPage() {
           }}
         >
           <div className="flex items-center gap-3">
-            <div
-              className="h-10 w-10 shrink-0 rounded"
-              style={{ backgroundColor: methodInfo.glowColor }}
-            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={methodInfo.logo} alt={methodInfo.name} className="h-8 w-8 shrink-0 object-contain" />
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-foreground">{methodInfo.name}</span>
               <span className="text-xs text-muted">{methodInfo.fullName}</span>

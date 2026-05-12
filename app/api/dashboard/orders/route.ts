@@ -194,7 +194,7 @@ export async function PATCH(req: NextRequest) {
         .join("\n");
 
       await resend.emails.send({
-        from:    "noreply@mckurdshop.com",
+        from:    "MC Kurd Shop <noreply@eclipticforce.store>",
         to:      user.email,
         subject: "Your order has been approved",
         text: [
