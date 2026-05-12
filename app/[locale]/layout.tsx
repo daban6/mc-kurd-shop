@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { CartProvider } from "@/context/CartContext";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +25,9 @@ export default async function LocaleLayout({
       className="h-full bg-background antialiased"
     >
       <body className="min-h-full flex flex-col font-sans">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <CartProvider>{children}</CartProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
