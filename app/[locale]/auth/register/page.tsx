@@ -1,8 +1,50 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sword, User, Mail, Lock, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [name,            setName]            = useState("");
+  const [email,           setEmail]           = useState("");
+  const [password,        setPassword]        = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [error,           setError]           = useState<string | null>(null);
+  const [loading,         setLoading]         = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!agreedToPrivacy) {
+      setError("You must agree to the Privacy Policy and Terms of Service.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error: signUpError } = await authClient.signUp.email({ email, password, name });
+      if (signUpError) {
+        setError(signUpError.message ?? "Registration failed. Please try again.");
+        return;
+      }
+      router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
@@ -23,7 +65,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Form */}
-          <form className="w-full space-y-4">
+          <form className="w-full space-y-4" onSubmit={handleSubmit}>
             {/* Username */}
             <div className="space-y-1.5">
               <label
@@ -39,6 +81,8 @@ export default function RegisterPage() {
                   type="text"
                   placeholder="CraftMaster99"
                   autoComplete="username"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="h-10 w-full rounded border border-border bg-background pl-9 pr-3 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -59,6 +103,8 @@ export default function RegisterPage() {
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="h-10 w-full rounded border border-border bg-background pl-9 pr-3 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -79,6 +125,8 @@ export default function RegisterPage() {
                   type="password"
                   placeholder="••••••••"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="h-10 w-full rounded border border-border bg-background pl-9 pr-3 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -99,14 +147,41 @@ export default function RegisterPage() {
                   type="password"
                   placeholder="••••••••"
                   autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   className="h-10 w-full rounded border border-border bg-background pl-9 pr-3 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
             </div>
 
+            {/* Privacy Policy Checkbox */}
+            <label className="flex cursor-pointer items-start gap-2.5">
+              <input
+                type="checkbox"
+                checked={agreedToPrivacy}
+                onChange={(e) => setAgreedToPrivacy(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+              />
+              <span className="text-xs text-muted">
+                I agree to the{" "}
+                <Link href="/privacy" className="text-primary hover:text-primary-hover transition-colors">
+                  Privacy Policy
+                </Link>
+                {" "}and{" "}
+                <Link href="/terms" className="text-primary hover:text-primary-hover transition-colors">
+                  Terms of Service
+                </Link>
+              </span>
+            </label>
+
+            {/* Error */}
+            {error && (
+              <p className="text-xs text-red-400">{error}</p>
+            )}
+
             {/* Submit */}
-            <Button className="mt-2 w-full" size="default">
-              Sign Up
+            <Button className="mt-2 w-full" size="default" disabled={loading}>
+              {loading ? "Creating account…" : "Sign Up"}
             </Button>
           </form>
 
