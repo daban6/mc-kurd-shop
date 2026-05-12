@@ -158,14 +158,14 @@ export default function Navbar({ locale }: { locale: string }) {
             )}
 
             {/* Cart */}
-            <button className="relative p-1.5 text-muted transition-colors hover:text-foreground">
+            <Link href="/cart" className="relative p-1.5 text-muted transition-colors hover:text-foreground">
               <ShoppingCart className="h-5 w-5" />
               {itemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-foreground">
                   {itemCount > 99 ? "99+" : itemCount}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button
