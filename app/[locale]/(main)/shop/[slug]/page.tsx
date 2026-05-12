@@ -11,6 +11,7 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import AddToCartButton from "@/components/shop/AddToCartButton";
+import ReviewSection from "@/components/shop/ReviewSection";
 import { Badge } from "@/components/ui/badge";
 import { Tabs } from "@/components/ui/tabs";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -114,32 +115,7 @@ export default async function ProductPage({
     {
       label: isKurdish ? "ڕەزامەندیەکان" : "Reviews",
       value: "reviews",
-      content: (
-        <div className="space-y-4">
-          {[
-            { user: "CraftMaster99",  text: "Absolutely stunning. My FPS is still solid at 60+.", stars: 5 },
-            { user: "MinecraftKurdi", text: "Best purchase I've made. Worth every dinar.",          stars: 5 },
-            { user: "BlockBuilder",   text: "Great quality but took a while to configure.",          stars: 4 },
-          ].map((review, i) => (
-            <div key={i} className="rounded border border-border bg-surface p-4">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-foreground">{review.user}</span>
-                <div className="flex items-center gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className="h-3 w-3"
-                      fill={s <= review.stars ? "#7c3aed" : "none"}
-                      stroke={s <= review.stars ? "#7c3aed" : "#71717a"}
-                    />
-                  ))}
-                </div>
-              </div>
-              <p className="text-sm text-muted">{review.text}</p>
-            </div>
-          ))}
-        </div>
-      ),
+      content: <ReviewSection slug={slug} locale={locale} />,
     },
     {
       label: isKurdish ? "گۆڕانکاریەکان" : "Changelog",
