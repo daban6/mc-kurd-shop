@@ -3,11 +3,13 @@
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { ShoppingCart, Menu, X, Sword } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar({ locale }: { locale: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   const navLinks = [
     { href: "/", label: locale === "ku" ? "سەرەتا" : "Home" },
@@ -93,9 +95,11 @@ export default function Navbar({ locale }: { locale: string }) {
             {/* Cart */}
             <button className="relative p-1.5 text-muted transition-colors hover:text-foreground">
               <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-foreground">
-                0
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-foreground">
+                  {itemCount > 99 ? "99+" : itemCount}
+                </span>
+              )}
             </button>
 
             {/* Mobile Menu Toggle */}
