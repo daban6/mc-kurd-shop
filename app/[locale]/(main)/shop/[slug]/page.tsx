@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs } from "@/components/ui/tabs";
+import { ReviewsSection } from "@/components/product/ReviewsSection";
 
 const product = {
   name: "BSL Shaders",
@@ -73,32 +74,6 @@ const tabContent = {
         illo inventore veritatis et quasi architecto beatae vitae dicta sunt
         explicabo.
       </p>
-    </div>
-  ),
-  reviews: (
-    <div className="space-y-4">
-      {[
-        { user: "CraftMaster99", text: "Absolutely stunning shaders. My FPS is still solid at 60+.", stars: 5 },
-        { user: "MinecraftKurdi", text: "Best shaders I've used. Worth every dinar.", stars: 5 },
-        { user: "BlockBuilder", text: "Great quality but took a while to configure.", stars: 4 },
-      ].map((review, i) => (
-        <div key={i} className="rounded border border-border bg-surface p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">{review.user}</span>
-            <div className="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  className="h-3 w-3"
-                  fill={s <= review.stars ? "#7c3aed" : "none"}
-                  stroke={s <= review.stars ? "#7c3aed" : "#71717a"}
-                />
-              ))}
-            </div>
-          </div>
-          <p className="text-sm text-muted">{review.text}</p>
-        </div>
-      ))}
     </div>
   ),
   changelog: (
@@ -232,7 +207,11 @@ export default async function ProductPage({
           defaultValue="description"
           tabs={[
             { label: "Description", value: "description", content: tabContent.description },
-            { label: "Reviews", value: "reviews", content: tabContent.reviews },
+            { 
+              label: "Reviews", 
+              value: "reviews", 
+              content: <ReviewsSection productId="00000000-0000-0000-0000-000000000001" /> 
+            },
             { label: "Changelog", value: "changelog", content: tabContent.changelog },
           ]}
         />
